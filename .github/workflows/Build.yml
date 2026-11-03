@@ -4,6 +4,9 @@ on:
   push:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -42,7 +45,9 @@ jobs:
           cp iraq_freight/merchant_app/build/app/outputs/flutter-apk/app-release.apk out/merchant.apk
           cp iraq_freight/driver_app/build/app/outputs/flutter-apk/app-release.apk out/driver.apk
 
-      - uses: actions/upload-artifact@v4
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
         with:
-          name: apks
-          path: out/*.apk
+          tag_name: build-${{ github.run_number }}
+          name: APK build ${{ github.run_number }}
+          files: out/*.apk
